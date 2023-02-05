@@ -12,4 +12,10 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+//tmp error handling fuinc
+void	fatal_error(const char *msg);
+
+//implemenet command
+int     exec_absolutepath(char *ab_path);
+
 #endif

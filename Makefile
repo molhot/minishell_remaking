@@ -1,5 +1,8 @@
 NAME=minishell
-SRCS=main.c
+SRCS=main.c\
+		evaluator/exec-notinmain.c\
+		tmp_func/fatal_error.c
+
 OBJS=$(SRCS:%.c=%.o)
 cc=cc
 CFLAGS= -Wall -Werror -Wextra
