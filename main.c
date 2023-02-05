@@ -9,8 +9,11 @@ int	main()
 		input = readline("$minishell > ");
 		printf("input is > |%s|\n", input);//must delete
 		if (input == NULL)
-			break;
+			break ;
+		if (input[0] == '\0')
+			continue ;
 		add_history(input);
+		exec_absolutepath(input);
 		free(input);
 	}
 	exit(0);

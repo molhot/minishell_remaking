@@ -1,6 +1,6 @@
 NAME=minishell
 SRCS=main.c\
-		evaluator/exec-notinmain.c\
+		evaluator/exec_inmain.c\
 		tmp_func/fatal_error.c
 
 OBJS=$(SRCS:%.c=%.o)
