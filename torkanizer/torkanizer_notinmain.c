@@ -1,5 +1,7 @@
 #include "../minishell.h"
 
+typedef struct s_token t_token;
+
 typedef enum e_token_kind{
     TK_WORD,
     TK_RESERVED,
@@ -7,11 +9,11 @@ typedef enum e_token_kind{
     TK_EOF
 }t_token_kind;
 
-typedef struct s_token{
+struct s_token{
     char            *word;
     t_token_kind    kind;
     t_token         *next;
-}t_token;
+};
 
 //torkanizer では | などのプロセスによって分解してあげればいいのでは
 
@@ -156,3 +158,25 @@ t_token *torkanizer(char *line)
     tok->next = new_token(NULL, TK_EOF);
     return (head.next);
 }
+
+int main()
+{
+    t_token *test;
+    char    *input;
+
+    while (true)
+	{
+		input = readline("$minishell > ");
+		printf("input is > |%s|\n", input);//must delete
+        test = torkanizer(input);//とーかないざーに入ったものは整合性が取れたものとする
+        // かつ引数は必ずある（ない場合は初めにリターンされるとする
+        while (test != NULL)
+        {
+            printf("kind is > %d and word is > %s\n", test->kind, test->word);
+            test = test->next;
+        }	
+	}
+}
+
+// gcc torkanizer_notinmain.c ../utils/*.c ../tmp_func/fatal_error.c -lreadline
+//command
