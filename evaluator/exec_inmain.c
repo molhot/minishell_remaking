@@ -7,8 +7,8 @@ int exec_absolutepath(char *ab_path)
         ab_path,
         NULL
     };
-    pid_t       pid;
-    int         wstatus;
+    pid_t		pid;
+    int			wstatus;
 
     pid = fork();
     if (pid < 0)

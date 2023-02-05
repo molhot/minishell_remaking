@@ -26,8 +26,24 @@ int exec_absolutepath_n(char *ab_path)
     return (0);
 }
 
+int exec_relativepath(char *exec_path)
+{
+    char    path[PATH_MAX];
+    char    *value;
+    char    *end;
+
+    value = getenv("PATH");
+    while (value != '\0')
+    {
+        
+    }
+}
+
 int main(int argc, char *argv[])
 {
     (void)argc;
-    exec_absolutepath_n(argv[1]);
+    if (argv[1][1] == '/')
+        exec_absolutepath_n(argv[1]);
+    else
+        exec_relativepath(argv[1]);
 }
