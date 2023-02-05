@@ -13,7 +13,10 @@ int	main()
 		if (input[0] == '\0')
 			continue ;
 		add_history(input);
-		exec_absolutepath(input);
+		if (input[0] == '/')
+			exec_absolutepath(input);
+		else
+			exec_relativepath(input);
 		free(input);
 	}
 	exit(0);
