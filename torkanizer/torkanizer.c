@@ -58,7 +58,21 @@ t_token *word(char **rest, char *line)
 
     start = line;
     while (*line != '\0' && is_metacharacter(*line) == false)
-        line++;
+    {
+		if (*line == '\'')
+		{
+			line++;
+			while (*line != '\'')
+			{
+				if (*line == '\0')
+					fatal_error("single quote\n");
+				line++;
+			}
+			line++;
+		}
+		else
+			line++;
+	}
     word = strndup(start, line - start);//strndupの作成
     if (word == NULL)
         fatal_error("strndup");
@@ -79,11 +93,13 @@ t_token *torkanizer(char *line)
             continue;
         else if (is_operator(line) == true)
         {
-            tok = tok->next = operator(&line, line);
+            tok->next = operator(&line, line);
+            tok = tok->next;
         }
         else if (is_word(line) == true)
         {
-            tok = tok->next = word(&line, line);
+            tok->next = word(&line, line);
+            tok = tok->next;
         }
         else
             fatal_error("unexpected token");
