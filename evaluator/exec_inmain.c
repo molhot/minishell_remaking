@@ -55,11 +55,11 @@ int exec(char *argv[])
         fatal_error("fork\n");
     else if (pid == 0)
     {
-        if (path[0] != '/')
+        if (path[0] != '/' || path[0] != '.')
             path = searchpath(path);
         path_check(path);
-        execve(searchpath(path), argv, environ);
-        fatal_error("execve");
+        execve(path, argv, environ);
+        fatal_error("execve\n");
     }
     else
     {
@@ -71,46 +71,19 @@ int exec(char *argv[])
 
 char	**token_to_chararray(t_token	*token)
 {
-	char	**argv;
-	t_token	*token_f;
-	size_t	malloc_count;
-	size_t	arg_position;
-
-	malloc_count = 0;
 	if (token == NULL)
 		return (NULL);
-	token_f = token;
-	while (token->kind != TK_EOF)
-	{
-		printf("%s\n", token->word);
-		token = token->next;
-		malloc_count++;
-	}
-	argv = (char **)malloc(sizeof(char *) * (malloc_count + 1));
-	if (argv == NULL)
-		fatal_error("malloc\n");
-	token = token_f;
-	arg_position = 0;
-	while (arg_position != malloc_count)
-	{
-		argv[arg_position] = ft_strdup(token->word);
-		arg_position++;
-		token = token->next;
-	}
-	argv[arg_position] = NULL;
-	return (argv);
+	return (ft_split(token->word, ' '));
 }
 
 void    interpret(char *line, int *stat_loc)
 {
-    t_token *token;
+    t_token *tokenall;
     char    **argv;
 
-	printf("%s\n", line);
-	token = torkanizer(line); //この時点でeofはすでにはじいているので記載なし
-	printf("%s\n", token->word);
-	if (token == NULL)
+	tokenall = torkanizer(line); //この時点でeofはすでにはじいているので記載なし
+	if (tokenall == NULL)
 		return ;
-	argv =  token_to_chararray(token);
+	argv =  token_to_chararray(tokenall);
 	*stat_loc = exec(argv);
 }

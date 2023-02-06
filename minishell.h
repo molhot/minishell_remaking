@@ -31,7 +31,7 @@ struct s_token{
 };
 
 //tmp error handling fuinc
-void	fatal_error(const char *msg); //__attribute__((noreturn));
+void	fatal_error(const char *msg) __attribute__((noreturn));
 
 //implemenet command
 int     exec(char *argv[]);
@@ -57,5 +57,6 @@ size_t	ft_strlen(const char *string_row);
 void	*ft_calloc(size_t n, size_t size);
 int     ft_memcmp(const void *buf1, const void *buf2, size_t n);
 char	*ft_strchr(const char *s, int c);
+char	**ft_split(char const *s, char c);
 
 #endif

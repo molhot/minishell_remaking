@@ -1,7 +1,5 @@
 #include "../minishell.h"
 
-typedef struct s_token t_token;
-
 //torkanizer では | などのプロセスによって分解してあげればいいのでは
 
 t_token *new_token(char *word, t_token_kind kind)
@@ -65,7 +63,6 @@ t_token *word(char **rest, char *line)
     if (word == NULL)
         fatal_error("strndup");
     *rest = line;
-    printf(">%s\n", word);
     return (new_token(word, TK_WORD));
 }
 
@@ -82,19 +79,49 @@ t_token *torkanizer(char *line)
             continue;
         else if (is_operator(line) == true)
         {
-            tok = tok->next;
-            tok = operator(&line, line);
+            tok = tok->next = operator(&line, line);
         }
         else if (is_word(line) == true)
         {
-            tok = tok->next;
-            tok = word(&line, line);
+            tok = tok->next = word(&line, line);
         }
         else
             fatal_error("unexpected token");
     }
     tok->next = new_token(NULL, TK_EOF);
-    printf("check\n");
-    printf("head is %s\n", head.word);
     return (head.next);
 }
+
+// t_token *torkanizer(char *line)
+// {
+//     t_token *tok;
+//     t_token *f_token;
+
+//     tok = ft_calloc(1, sizeof(t_token *));
+//     f_token = tok;
+//     printf("f_token is %p\n", f_token);
+//     while (*line != '\0')
+//     {
+//         if (consume_blank(&line, line) == true)
+//             continue;
+//         else if (is_operator(line) == true)
+//         {
+//             tok = operator(&line, line);
+//             tok = tok->next;
+//         }
+//         else if (is_word(line) == true)
+//         {
+//             tok = word(&line, line);
+//             printf("tokword is >%s\n", tok->word);
+//             printf("token is %p\n", tok);
+//             tok = tok->next;
+//         }
+//         else
+//             fatal_error("unexpected token");
+//     }
+//     printf("token is %p\n", tok);
+//     tok = new_token(NULL, TK_EOF);
+//     printf("f_token is >%p\n", f_token);
+//     return (f_token);
+// }
+

@@ -7,8 +7,6 @@ t_token *new_token(char *word, t_token_kind kind)
     t_token *tok;
 
     tok = ft_calloc(1, sizeof(*tok));
-    printf("word is > |%s|\n", word);
-    printf("kind is > |%d|\n", kind);
     if (tok == NULL)
         fatal_error("calloc\n");
     tok->word = word;
