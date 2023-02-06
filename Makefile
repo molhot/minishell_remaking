@@ -1,7 +1,10 @@
 NAME=minishell
 SRCS=main.c\
 		utils/ft_bzero.c utils/ft_strdup.c utils/ft_strlcat.c utils/ft_strlcpy.c utils/ft_strlen.c utils/ft_strncpy.c\
+		utils/ft_calloc.c utils/ft_memcmp.c utils/ft_strchr.c\
+		check_word/is_anything.c check_word/startswith.c\
 		evaluator/exec_inmain.c\
+		torkanizer/torkanizer.c\
 		tmp_func/fatal_error.c
 
 OBJS=$(SRCS:%.c=%.o)

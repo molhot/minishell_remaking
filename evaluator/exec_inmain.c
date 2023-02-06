@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static char *searchpath(char *exec_path)
+static char *searchpath(const char *exec_path)
 {
     char    path[PATH_MAX];
     char    *value;
@@ -8,7 +8,7 @@ static char *searchpath(char *exec_path)
     char    *exec_filename;
 
     value = getenv("PATH");
-    while (value != '\0')
+    while (*value != '\0')
     {
         ft_bzero(path, PATH_MAX);
         end = strchr(value, ':');
@@ -32,21 +32,32 @@ static char *searchpath(char *exec_path)
     return (NULL);
 }
 
-int exec_relativepath(char *path)
+void    path_check(const char *path)
+{
+    if (path == NULL)
+        fatal_error("path is NULL\n");
+    else if (access(path, F_OK) < 0)
+        fatal_error("path can not access\n");
+}
+
+//interpretを分割している
+
+int exec(char *argv[])
 {
     extern char **environ;
-    char        *argv[] = {
-        searchpath(path),
-        NULL
-    };
+    const char  *path;
     pid_t       pid;
     int         wstatus;
 
     pid = fork();
+    path = (const char *)argv[0];
     if (pid < 0)
         fatal_error("fork\n");
     else if (pid == 0)
     {
+        if (path[0] != '/')
+            path = searchpath(path);
+        path_check(path);
         execve(searchpath(path), argv, environ);
         fatal_error("execve");
     }
@@ -58,28 +69,48 @@ int exec_relativepath(char *path)
     return (0);
 }
 
-int exec_absolutepath(char *ab_path)
+char	**token_to_chararray(t_token	*token)
 {
-    extern char **environ;
-    char        *argv[] = {
-        ab_path,
-        NULL
-    };
-    pid_t		pid;
-    int			wstatus;
+	char	**argv;
+	t_token	*token_f;
+	size_t	malloc_count;
+	size_t	arg_position;
 
-    pid = fork();
-    if (pid < 0)
-        fatal_error("fork\n");
-    else if (pid == 0)
-    {
-        execve(ab_path, argv, environ);
-        fatal_error("execve");
-    }
-    else
-    {
-        wait(&wstatus);
-        return (WEXITSTATUS(wstatus));
-    }
-    return (0);
+	malloc_count = 0;
+	if (token == NULL)
+		return (NULL);
+	token_f = token;
+	while (token->kind != TK_EOF)
+	{
+		printf("%s\n", token->word);
+		token = token->next;
+		malloc_count++;
+	}
+	argv = (char **)malloc(sizeof(char *) * (malloc_count + 1));
+	if (argv == NULL)
+		fatal_error("malloc\n");
+	token = token_f;
+	arg_position = 0;
+	while (arg_position != malloc_count)
+	{
+		argv[arg_position] = ft_strdup(token->word);
+		arg_position++;
+		token = token->next;
+	}
+	argv[arg_position] = NULL;
+	return (argv);
+}
+
+void    interpret(char *line, int *stat_loc)
+{
+    t_token *token;
+    char    **argv;
+
+	printf("%s\n", line);
+	token = torkanizer(line); //この時点でeofはすでにはじいているので記載なし
+	printf("%s\n", token->word);
+	if (token == NULL)
+		return ;
+	argv =  token_to_chararray(token);
+	*stat_loc = exec(argv);
 }

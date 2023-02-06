@@ -11,13 +11,41 @@
 #include <assert.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <stdint.h>
+#include <fcntl.h>
+
+//for torkanizer structor
+typedef struct s_token t_token;
+
+typedef enum e_token_kind{
+    TK_WORD,
+    TK_RESERVED,
+    TK_OP,
+    TK_EOF
+}t_token_kind;
+
+struct s_token{
+    char            *word;
+    t_token_kind    kind;
+    t_token         *next;
+};
 
 //tmp error handling fuinc
-void	fatal_error(const char *msg);
+void	fatal_error(const char *msg); //__attribute__((noreturn));
 
 //implemenet command
-int     exec_absolutepath(char *ab_path);
-int     exec_relativepath(char *path);
+int     exec(char *argv[]);
+void    interpret(char *line, int *stat_loc);
+
+//torkanizer
+t_token *torkanizer(char *line);
+
+//is_anything func, like [is_metacharacter]
+bool    is_metacharacter(char c);
+bool    is_word(const char *s);
+bool    is_blank(char c);
+bool    is_operator(const char *s);
+bool    startswith(const char *s, const char *keyword);
 
 //utils
 void	ft_bzero(void *str, size_t n);
